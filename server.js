@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -11,20 +12,24 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public'))); // <-- ini penting
 
 // Koneksi ke database
+const mysql = require('mysql');
+
 const db = mysql.createConnection({
-  host: 'your-database-host', // bisa PlanetScale atau Render MySQL
-  user: 'your-user',
-  password: 'your-password',
-  database: 'monitoring_jaringan'
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT
 });
 
 db.connect((err) => {
   if (err) {
-    console.error('Gagal koneksi ke database:', err);
+    console.error('Koneksi ke database gagal:', err);
     return;
   }
-  console.log('Terhubung ke database MySQL');
+  console.log('Terhubung ke database MySQL Railway');
 });
+
 
 // API Endpoint
 app.post('/data', (req, res) => {
