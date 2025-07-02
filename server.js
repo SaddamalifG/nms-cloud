@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const mysql = require('mysql2');
+const mysql = require('mysql2'); // HANYA pakai ini
 const cors = require('cors');
 const path = require('path');
 
@@ -9,11 +9,9 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // <-- ini penting
+app.use(express.static(path.join(__dirname, 'public'))); // folder untuk file frontend
 
-// Koneksi ke database
-const mysql = require('mysql');
-
+// Koneksi ke database Railway
 const db = mysql.createConnection({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
@@ -30,8 +28,7 @@ db.connect((err) => {
   console.log('Terhubung ke database MySQL Railway');
 });
 
-
-// API Endpoint
+// Endpoint untuk menerima data dari ESP32/frontend
 app.post('/data', (req, res) => {
   const data = req.body;
 
@@ -64,6 +61,7 @@ app.post('/data', (req, res) => {
   });
 });
 
+// Endpoint untuk mengambil data terbaru
 app.get('/data/latest', (req, res) => {
   const sql = 'SELECT * FROM data_jaringan ORDER BY created_at DESC LIMIT 1';
   db.query(sql, (err, results) => {
@@ -76,6 +74,7 @@ app.get('/data/latest', (req, res) => {
   });
 });
 
+// Jalankan server
 app.listen(port, () => {
   console.log(`Server berjalan di http://localhost:${port}`);
 });
