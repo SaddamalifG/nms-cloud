@@ -1,17 +1,18 @@
 require('dotenv').config();
 const express = require('express');
-const mysql = require('mysql2'); // HANYA pakai ini
+const mysql = require('mysql2'); // ✅ gunakan hanya mysql2
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080; // ✅ Railway otomatis set PORT
 
+// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // folder untuk file frontend
+app.use(express.static(path.join(__dirname, 'public'))); // ✅ untuk akses frontend
 
-// Koneksi ke database Railway
+// Koneksi ke database MySQL Railway
 const db = mysql.createConnection({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
@@ -20,12 +21,13 @@ const db = mysql.createConnection({
   port: process.env.MYSQLPORT
 });
 
+// Cek koneksi database
 db.connect((err) => {
   if (err) {
-    console.error('Koneksi ke database gagal:', err);
-    return;
+    console.error('❌ Koneksi ke database gagal:', err);
+    process.exit(1); // Keluar dari app jika koneksi gagal
   }
-  console.log('Terhubung ke database MySQL Railway');
+  console.log('✅ Terhubung ke database MySQL Railway');
 });
 
 // Endpoint untuk menerima data dari ESP32/frontend
@@ -53,11 +55,10 @@ app.post('/data', (req, res) => {
 
   db.query(sql, values, (err) => {
     if (err) {
-      console.error('Error menyimpan data:', err);
-      res.status(500).json({ message: 'Gagal menyimpan data' });
-      return;
+      console.error('❌ Error menyimpan data:', err);
+      return res.status(500).json({ message: 'Gagal menyimpan data' });
     }
-    res.status(200).json({ message: 'Data berhasil disimpan' });
+    res.status(200).json({ message: '✅ Data berhasil disimpan' });
   });
 });
 
@@ -66,9 +67,8 @@ app.get('/data/latest', (req, res) => {
   const sql = 'SELECT * FROM data_jaringan ORDER BY created_at DESC LIMIT 1';
   db.query(sql, (err, results) => {
     if (err) {
-      console.error('Error mengambil data:', err);
-      res.status(500).json({ message: 'Gagal mengambil data' });
-      return;
+      console.error('❌ Error mengambil data:', err);
+      return res.status(500).json({ message: 'Gagal mengambil data' });
     }
     res.json(results[0]);
   });
@@ -76,5 +76,5 @@ app.get('/data/latest', (req, res) => {
 
 // Jalankan server
 app.listen(port, () => {
-  console.log(`Server berjalan di http://localhost:${port}`);
+  console.log(`🚀 Server berjalan di http://localhost:${port}`);
 });
