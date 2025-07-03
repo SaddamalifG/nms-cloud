@@ -18,13 +18,11 @@ const db = mysql.createConnection({
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
   port: process.env.MYSQLPORT,
-  connectTimeout: 10000,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0,
   ssl: {
-    rejectUnauthorized: true
+    rejectUnauthorized: false
   }
 });
+
 
 
 
