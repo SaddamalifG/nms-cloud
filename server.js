@@ -20,8 +20,12 @@ const db = mysql.createConnection({
   port: process.env.MYSQLPORT,
   connectTimeout: 10000,
   enableKeepAlive: true,
-  keepAliveInitialDelay: 0
+  keepAliveInitialDelay: 0,
+  ssl: {
+    rejectUnauthorized: true
+  }
 });
+
 
 
 db.connect((err) => {
