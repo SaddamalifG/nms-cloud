@@ -70,6 +70,11 @@ app.get('/data/latest', (req, res) => {
   });
 });
 
+app.get('/', (req, res) => {
+  res.send('Cloud-NMS API is running');
+});
+
+
 app.listen(port, () => {
   console.log(`🚀 Server berjalan di http://localhost:${port}`);
 });
