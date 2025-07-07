@@ -1,19 +1,19 @@
+require('dotenv').config();
 const mysql = require('mysql2');
 
-const db = mysql.createConnection({
-  host: 'interchange.proxy.rlwy.net',
-  user: 'root',
-  password: 'DrMGmyXdslkGDYHfPyGGhorFeTGdMKAr',
-  database: 'railway',
-  port: 28766,
-  ssl: { rejectUnauthorized: false }
+const conn = mysql.createConnection({
+  host: process.env.MYSQLHOST,
+  port: process.env.MYSQLPORT,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE
 });
 
-db.connect(err => {
+conn.connect((err) => {
   if (err) {
     console.error('❌ Koneksi gagal:', err.message);
   } else {
-    console.log('✅ Koneksi ke MySQL Railway berhasil!');
-    db.end();
+    console.log('✅ Koneksi berhasil ke database Railway');
   }
+  conn.end();
 });
